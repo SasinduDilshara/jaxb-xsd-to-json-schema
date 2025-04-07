@@ -29,6 +29,10 @@ repositories {
     }
 }
 
+configurations {
+    jaxb
+}
+
 dependencies {
     implementation "jakarta.xml.bind:jakarta.xml.bind-api:${jakartaXmlBindVersion}"
     implementation "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
@@ -36,6 +40,16 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.github.victools:jsonschema-generator:${victoolsVersion}"
     implementation "org.glassfish.jaxb:jaxb-xjc:${jaxbXjcVersion}"
+
+//    // JAXB2 Basics plugin for -Xpropertyaccessors
+//    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics:0.12.0"
+
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics:1.11.1"
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics-annotate:1.0.4"
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-value-constructor:3.0"
+
+    jaxb "org.glassfish.jaxb:jaxb-xjc:${jaxbXjcVersion}"
+    jaxb "org.glassfish.jaxb:jaxb-runtime:${jaxbXjcVersion}"
 }
 
 task generateJaxbClasses {
@@ -52,11 +66,20 @@ task generateJaxbClasses {
                     classname: 'com.sun.tools.xjc.XJCTask',
                     classpath: configurations.runtimeClasspath.asPath)
             ant.xjc(destdir: outputDir,
-                    package: 'com.example.generated',
-                    schema: xsdFile) {
-                arg(value: '-extension')
+                    package: 'com.example.jaxb',
+                    schema: xsdFile,
+                    extension: true) {
                 produces(dir: outputDir, includes: '**/*.java')
             }
+        }
+    }
+}
+
+// Add generated sources to Java compilation
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir}/generated-sources/jaxb"
         }
     }
 }

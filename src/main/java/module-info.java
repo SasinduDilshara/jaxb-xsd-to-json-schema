@@ -23,6 +23,6 @@ module io.ballerina.jsonschema.validator {
     requires com.github.victools.jsonschema.generator;
     requires com.fasterxml.jackson.module.jakarta.xmlbind;
     requires java.xml;
-    exports com.example.generated;
+    opens com.example.jaxb to com.fasterxml.jackson.databind;
     exports com.example.xsd;
 }
