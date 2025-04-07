@@ -38,3 +38,4 @@ target
 velocity.log*
 *Ballerina.lock
 schema/
+jsonschemas/
